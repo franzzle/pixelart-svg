@@ -9,14 +9,13 @@ import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
 
-class SvgDocumentHelperTest {
+class SvgServiceImplTest {
     @Test
     fun createSvgDoc() {
-        val svgDocumentHelper = SvgDocumentHelper
-        val createSvgDoc: Document = svgDocumentHelper.createSvgDoc(60, 40);
+        val svgServiceImpl = SvgServiceImpl()
+        val createSvgDoc: Document = svgServiceImpl.createSvgDoc(60, 40);
 
         println(serializeDocumentToString(createSvgDoc))
-
     }
 
     fun serializeDocumentToString(document: Document): String {
