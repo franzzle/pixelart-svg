@@ -1,6 +1,9 @@
 package com.franzzle.pixelart.svg;
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -12,11 +15,17 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/conversion")
+@Tag(name = "conversion", description = "API to handle and conversion of a png to svg")
 class ImageToSvgController {
 
     @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @Operation(summary = "Upload a PNG image", description = "Upload a PNG image to the server.")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "Successful response"),
+        ApiResponse(responseCode = "400", description = "Bad request"),
+        ApiResponse(responseCode = "500", description = "Internal server error")
+    )
     fun uploadImage(@RequestBody imageFile: MultipartFile): ResponseEntity<String> {
         try {
             val bytes = imageFile.bytes
