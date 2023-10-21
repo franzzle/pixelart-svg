@@ -17,6 +17,7 @@ class ConverterServiceImpl(
 
     override fun convert(inputStream: InputStream?): String? {
         val bufferedImage = ImageIO.read(inputStream)
+        inputStream!!.close()
         val svgDoc = svgService.createSvgDoc(bufferedImage.width, bufferedImage.height)
         var svgHorizontal = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_HORIZONTAL)
         val svgVertical = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_VERTICAL)
