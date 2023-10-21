@@ -18,15 +18,12 @@ class ConverterServiceImpl(
     override fun convert(inputStream: InputStream?): String? {
         val bufferedImage = ImageIO.read(inputStream)
         val svgDoc = svgService.createSvgDoc(bufferedImage.width, bufferedImage.height)
-        System.out.println("Width : " + bufferedImage.width + " and Height : " + bufferedImage.height)
-        var svgh = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_HORIZONTAL)
-        val svgv = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_VERTICAL)
-        if (svgh.getElementsByTagName("rect").length < svgv.getElementsByTagName("rect").length) {
-            svgh = svgv
+        var svgHorizontal = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_HORIZONTAL)
+        val svgVertical = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_VERTICAL)
+        if (svgHorizontal.getElementsByTagName("rect").length < svgVertical.getElementsByTagName("rect").length) {
+            svgHorizontal = svgVertical
         }
-
-
-        return svgService.serializeDocumentToString(svgh)
+        return svgService.serializeDocumentToString(svgHorizontal)
     }
 
     private fun generateSvgFromRaster(image: BufferedImage,
@@ -110,7 +107,7 @@ class ConverterServiceImpl(
         rect.setAttribute("fill", "rgb(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")")
         val alpha = rgba[3]
         if (alpha > 0) {
-            rect.setAttribute("fill-opacity", ((128 - alpha) / 128.0).toString())
+            rect.setAttribute("fill-opacity", alpha.toString())
         }
         svg.documentElement.appendChild(rect)
     }
