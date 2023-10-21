@@ -6,9 +6,7 @@ import org.w3c.dom.ls.DOMImplementationLS
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
-import java.net.URL
 import java.util.*
-import java.util.regex.Pattern
 import java.util.stream.IntStream
 import javax.imageio.ImageIO
 import javax.xml.parsers.ParserConfigurationException

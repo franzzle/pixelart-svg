@@ -1,5 +1,6 @@
 package com.franzzle.pixelart.svg;
 
+import com.franzzle.pixelart.svg.service.ConverterService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -14,15 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
-import javax.imageio.ImageIO
 
 @RestController
 @RequestMapping("/conversion")
 @Tag(name = "conversion", description = "API to handle and conversion of a png to svg")
-class ImageToSvgController {
-
-
-
+class ImageToSvgController  (
+    @Autowired
+    private val converterService: ConverterService
+) {
     @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @Operation(summary = "Upload a PNG image", description = "Upload a PNG image to the server.")
     @ApiResponses(
@@ -34,11 +34,11 @@ class ImageToSvgController {
         try {
 
             val imageInputStream = imageFile.resource.inputStream;
-
+            val convert = converterService.convert(imageInputStream)
             // You can process the image here
             // For example, save it to a file or perform some operations
             // Be sure to handle exceptions and validation appropriately
-            return ResponseEntity.ok("Image uploaded successfully!")
+            return ResponseEntity.ok(convert)
         } catch (e: IOException) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading image.")
         }
