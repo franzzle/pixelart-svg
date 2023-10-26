@@ -39,3 +39,11 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.jar {
+	manifest {
+		attributes(mapOf("Implementation-Title" to rootProject.name,
+			"Implementation-Version" to project.version))
+	}
+	archiveBaseName.set("app")
+}

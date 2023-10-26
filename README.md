@@ -27,3 +27,22 @@ http://localhost:9380/v3/api-docs
 ```sh
 http://localhost:9380/swagger-ui/index.html
 ```
+
+## Docker image for x64 (Intel based computers)
+
+Create a docker with this command :
+
+```
+export JAVA_HOME=~/Library/Java/JavaVirtualMachines/openjdk-17.0.1/Contents/Home 
+./gradlew clean build
+docker build -t  pixelart-svg:0.0.1 .
+docker build --no-cache -t  pixelart-svg:0.0.1 .
+```
+
+Publishing to Docker Hub
+
+```sh
+docker tag franzzle/pixelart-svg:0.0.1 franzzle/pixelart-svg:0.0.1
+docker login
+docker push franzzle/pixelart-svg:0.0.1
+```
