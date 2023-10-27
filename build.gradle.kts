@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,6 +7,8 @@ plugins {
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
 }
+
+apply(plugin = "io.spring.dependency-management")
 
 group = "com.franzzle"
 version = "0.0.1-SNAPSHOT"
@@ -29,6 +32,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
+
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs += "-Xjsr305=strict"
@@ -38,4 +42,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.named("bootJar") {
+	archivesName = "app"
+	version = ""
+}
+
+tasks.getByName<Jar>("jar") {
+	enabled = true
 }
