@@ -36,7 +36,7 @@ class SvgServiceImpl : SvgService{
             transformer.transform(DOMSource(document), StreamResult(writer))
             writer.toString()
         } catch (e: Exception) {
-            throw ConversionException(e.message,e.cause);
+            throw SVGConversionException(e.cause);
         }
     }
 }

@@ -1,11 +1,13 @@
 package com.franzzle.pixelart.svg.service
 
+import com.franzzle.pixelart.svg.service.ScanDirection.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.w3c.dom.Document
 import java.awt.image.BufferedImage
 import java.io.InputStream
 import java.util.*
+import java.util.function.BiPredicate
 import java.util.stream.IntStream
 import javax.imageio.ImageIO
 
@@ -16,37 +18,47 @@ class ConverterServiceImpl(@Autowired private val svgService: SvgService) : Conv
         val bufferedImage = ImageIO.read(inputStream)
         inputStream!!.close()
         val svgDoc = svgService.createSvgDoc(bufferedImage.width, bufferedImage.height)
-        var svgHorizontal = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_HORIZONTAL)
-        val svgVertical = generateSvgFromRaster(bufferedImage,svgDoc, DIRECTION_VERTICAL)
-        if (svgHorizontal.getElementsByTagName("rect").length < svgVertical.getElementsByTagName("rect").length) {
-            svgHorizontal = svgVertical
+        val svgHorizontal = generateSvgDocumentFromRaster(bufferedImage,svgDoc, HORIZONTAL)
+        val svgVertical = generateSvgDocumentFromRaster(bufferedImage,svgDoc, VERTICAL)
+
+        val horizontalLinesShorterThenVertical = BiPredicate<Document, Document> { svgHorDoc, svgVertDoc ->
+            val elementsByTagName = svgHorDoc.getElementsByTagName("rect")
+            elementsByTagName.length < svgVertDoc.getElementsByTagName("rect").length
+        }
+
+        if (horizontalLinesShorterThenVertical.test(svgHorizontal, svgVertical)) {
+            return svgService.serializeDocumentToSvgFormat(svgVertical)
         }
         return svgService.serializeDocumentToSvgFormat(svgHorizontal)
     }
 
-    private fun generateSvgFromRaster(image: BufferedImage,
-                                      svg: Document,
-                                      direction: Int): Document {
-        if (direction == DIRECTION_HORIZONTAL) {
-            IntStream.range(0, image.height).forEach { y: Int ->
-                var numberOfConsecutivePixels: Int
-                var x = 0
-                while (x < image.width) {
-                    numberOfConsecutivePixels = createLine(image, svg, x, y, direction)
-                    x += numberOfConsecutivePixels
+    private fun generateSvgDocumentFromRaster(image: BufferedImage,
+                                              svg: Document,
+                                              scanDirection: ScanDirection): Document {
+        when (scanDirection){
+            HORIZONTAL -> {
+                IntStream.range(0, image.height).forEach { y: Int ->
+                    var numberOfConsecutivePixels: Int
+                    var x = 0
+                    while (x < image.width) {
+                        numberOfConsecutivePixels = createLine(image, svg, x, y, scanDirection)
+                        x += numberOfConsecutivePixels
+                    }
                 }
             }
-        } else {
-            IntStream.range(0, image.width).forEach { x: Int ->
-                var numberOfConsecutivePixels: Int
-                var y = 0
-                while (y < image.height) {
-                    numberOfConsecutivePixels = createLine(image, svg, x, y, direction)
-                    y += numberOfConsecutivePixels
+            VERTICAL -> {
+                IntStream.range(0, image.width).forEach { x: Int ->
+                    var numberOfConsecutivePixels: Int
+                    var y = 0
+                    while (y < image.height) {
+                        numberOfConsecutivePixels = createLine(image, svg, x, y, scanDirection)
+                        y += numberOfConsecutivePixels
+                    }
                 }
             }
         }
         return svg
+
     }
 
 
@@ -54,7 +66,7 @@ class ConverterServiceImpl(@Autowired private val svgService: SvgService) : Conv
                            svg: Document,
                            x: Int,
                            y: Int,
-                           direction: Int): Int {
+                           direction: ScanDirection): Int {
         val rgba = getPixelColors(image, x, y)
         var delta = 1
         while (isSimilarPixel(image, rgba, x, y, delta, direction)) {
@@ -79,8 +91,8 @@ class ConverterServiceImpl(@Autowired private val svgService: SvgService) : Conv
                                x: Int,
                                y: Int,
                                delta: Int,
-                               direction: Int): Boolean {
-        return if (direction == DIRECTION_HORIZONTAL) {
+                               direction: ScanDirection): Boolean {
+        return if (direction == HORIZONTAL) {
             val res = x + delta
             res < image.width && Objects.deepEquals(rgba, getPixelColors(image, res, y))
         } else {
@@ -94,9 +106,9 @@ class ConverterServiceImpl(@Autowired private val svgService: SvgService) : Conv
                                   x: Int,
                                   y: Int,
                                   width: Int,
-                                  direction: Int) {
-        val rectWidth = if (direction == DIRECTION_VERTICAL) 1 else width
-        val rectHeight = if (direction == DIRECTION_VERTICAL) width else 1
+                                  direction: ScanDirection) {
+        val rectWidth = if (direction == VERTICAL) 1 else width
+        val rectHeight = if (direction == VERTICAL) width else 1
         val rect = svg.createElement("rect")
         rect.setAttribute("x", x.toString())
         rect.setAttribute("y", y.toString())
@@ -110,8 +122,4 @@ class ConverterServiceImpl(@Autowired private val svgService: SvgService) : Conv
         svg.documentElement.appendChild(rect)
     }
 
-    companion object {
-        const val DIRECTION_HORIZONTAL = 1
-        const val DIRECTION_VERTICAL = 2
-    }
 }
