@@ -10,11 +10,8 @@ import java.util.stream.IntStream
 import javax.imageio.ImageIO
 
 @Service
-class ConverterServiceImpl(
-        @Autowired
-        private val svgService: SvgService
-) : ConverterService {
-
+class ConverterServiceImpl(@Autowired private val svgService: SvgService) : ConverterService
+{
     override fun convert(inputStream: InputStream?): String? {
         val bufferedImage = ImageIO.read(inputStream)
         inputStream!!.close()
@@ -24,7 +21,7 @@ class ConverterServiceImpl(
         if (svgHorizontal.getElementsByTagName("rect").length < svgVertical.getElementsByTagName("rect").length) {
             svgHorizontal = svgVertical
         }
-        return svgService.serializeDocumentToString(svgHorizontal)
+        return svgService.serializeDocumentToSvgFormat(svgHorizontal)
     }
 
     private fun generateSvgFromRaster(image: BufferedImage,

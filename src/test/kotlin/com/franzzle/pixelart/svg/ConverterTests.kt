@@ -8,10 +8,10 @@ import javax.imageio.ImageIO
 class ConverterTests {
     @Test
     fun loadImage() {
-        val resource = javaClass.classLoader.getResource("test.png")
-        val file = File(resource.toURI())
+        val resource = javaClass.classLoader.getResource("test.png")?.file
+        val file = File(resource)
         if(file.exists()){
-            val bufferedImage = ImageIO.read(file);
+            val bufferedImage = ImageIO.read(file)
             assertNotNull("Should not be null", bufferedImage != null)
         }
     }

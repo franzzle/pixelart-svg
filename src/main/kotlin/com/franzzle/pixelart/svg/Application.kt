@@ -8,9 +8,7 @@ import org.springframework.context.annotation.ComponentScan
 @SpringBootApplication
 @OpenAPIDefinition
 @ComponentScan(basePackages = ["com.franzzle.pixelart"])
-class Application {
-
-}
+class Application
 
 fun main(args: Array<String>) {
 	runApplication<Application>(*args)
