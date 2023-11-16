@@ -29,9 +29,9 @@ class SvgServiceImpl : SvgService{
     }
 
     override fun serializeDocumentToSvgFormat(document: Document): String {
+        val transformerFactory: TransformerFactory = TransformerFactory.newInstance()
+        val transformer: Transformer = transformerFactory.newTransformer()
         return try {
-            val transformerFactory: TransformerFactory = TransformerFactory.newInstance()
-            val transformer: Transformer = transformerFactory.newTransformer()
             val writer = StringWriter()
             transformer.transform(DOMSource(document), StreamResult(writer))
             writer.toString()

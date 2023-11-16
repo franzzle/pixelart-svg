@@ -33,8 +33,7 @@ class ImageToSvgController  (
     fun uploadImage(@RequestBody imageFile: MultipartFile): ResponseEntity<String> {
         try {
 
-            val imageInputStream = imageFile.resource.inputStream;
-            val convert = converterService.convert(imageInputStream)
+            val convert = converterService.convert(imageFile.resource.inputStream)
             // You can process the image here
             // For example, save it to a file or perform some operations
             // Be sure to handle exceptions and validation appropriately
