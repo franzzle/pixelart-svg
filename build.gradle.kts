@@ -11,7 +11,7 @@ plugins {
 apply(plugin = "io.spring.dependency-management")
 
 group = "com.franzzle"
-version = "0.0.1-SNAPSHOT"
+version = "0.1.0"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
@@ -26,7 +26,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-//	implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
