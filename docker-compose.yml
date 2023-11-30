@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   pixelartsvg:
-    image: "pixelart-svg:0.1.0"
+    image: "franzzle/pixelart-svg:0.1.0"
     ports:
       - "9380:9380"
 

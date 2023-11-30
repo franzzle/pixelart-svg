@@ -58,13 +58,19 @@ docker build --no-cache -t  franzzle/pixelart-svg:0.1.0 .
 ## Run docker
 
 ```sh
-docker run -d -p 9380:9380 franzzle/pixelart-svg:0.1.0 .
+docker run -d -p 9380:9380 franzzle/pixelart-svg:0.1.0
 ```
 
 ## Pull from Docker Hub
 ```sh
 docker pull franzzle/pixelart-svg:0.1.0
 docker run -d -p 9380:9380 franzzle/pixelart-svg:0.1.0
+```
+
+## Docker compose run
+
+```sh
+docker-compose up pixelartsvg
 ```
 
 ## Future improvements 
