@@ -1,7 +1,7 @@
 package com.franzzle.pixelart.svg.service
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import java.io.File
@@ -9,9 +9,8 @@ import javax.imageio.ImageIO
 import kotlin.streams.asStream
 
 class ConverterServiceImplTest {
-    @DisplayName("Convert png to a svg and verify if it contains expected svg tags")
     @Test
-    fun convertToSvg(){
+    fun `Convert png to a svg and verify if it contains expected svg tags`(){
         expectImageToBePresent("test.png")
         val converterServiceImpl = ConverterServiceImpl(SvgServiceImpl())
         val svgOutput = converterServiceImpl.convert(this.javaClass.getResourceAsStream("/test.png"))
