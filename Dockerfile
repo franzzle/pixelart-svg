@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM openjdk:17
 LABEL maintainer="franzzle"
 
 # Create a working directory inside the container

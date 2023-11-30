@@ -44,6 +44,29 @@ I have Based on the PHP code in this git repo :
 
 https://github.com/meyerweb/px2svg
 
+## Docker image for x64 (Intel based computers)
+
+Create a docker with this command :
+
+```
+export JAVA_HOME=~/Library/Java/JavaVirtualMachines/temurin-17.0.7/Contents/Home 
+export JAVA_HOME=~/Library/Java/JavaVirtualMachines/azul-17.0.6/Contents/Home 
+./gradlew clean build
+docker build --no-cache -t  franzzle/pixelart-svg:0.1.0 .
+```
+
+## Run docker
+
+```sh
+docker run -d -p 9380:9380 pixelart-svg:0.1.0
+```
+
+## Pull from Docker Hub
+```sh
+docker pull franzzle/pixelart-svg:0.1.0
+docker run -d -p 9380:9380 franzzle/pixelart-svg:0.1.0
+```
+
 ## Future improvements 
 * Optimize the scanning of the Square blocks.
 * Optimize the SVG with a library or code it myself.
